@@ -24,7 +24,10 @@ This workflow is designed to hit every single point in the job description.
 *   **Glide's Requirement:** `Strong proficiency with BigQuery and SQL for large-scale data analysis.`
 *   **Your Action:**
     1.  Take the Google Sheet you've created (`Belgian beers and breweries`) and upload it as a raw table into Google BigQuery.
-    2.  **In your video, show this table in the BigQuery UI.** Say, *"The first step was to establish our data foundation. I've taken the raw beer data and ingested it into Google BigQuery, our company's data warehouse, to handle analysis at scale."*
+    2.  **In your video, show this table in the BigQuery UI.** Say, *"The first step was to establish our data foundation. I've created a workflow in n8n to scrape and transform data from 2 sources:*
+        1.  *(List of Belgian beers on Wikipedia)[https://nl.wikipedia.org/wiki/Lijst_van_Belgische_bieren]*
+        2.  *(List of Belgian municipalities and provinces on data europa)[https://data.europa.eu/data/datasets/https-www-odwb-be-explore-dataset-communesgemeente-belgium-?locale=en]*
+    3.  *I then created a table in Google BigQuery, our company's data warehouse, to handle analysis at scale."*
 
 #### **Step 2: Data Integration & Expansion - Using Python & an API**
 
