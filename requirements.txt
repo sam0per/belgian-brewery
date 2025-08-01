@@ -6,3 +6,7 @@ google-oauth2-tool>=0.0.3
 geopy>=2.3.0
 requests>=2.28.0
 jupyter>=1.0.0
+python-dotenv>=0.19.0
+ipykernel>=6.9.0
+ipython>=8.0.0
+loguru>=0.6.0
