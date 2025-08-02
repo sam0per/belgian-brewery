@@ -13,7 +13,7 @@ Explain the problem: sourcing Belgian beer data to identify potential partnershi
 
 ## 📁 Architecture Diagram
 
-_(Embed `architecture.png` here)  
+![Architecture Diagram](./img/architecture.drawio.png) 
 Highlights: Optional LLM via Ollama for name-cleaning, Python scraper layer → Raw tables in BigQuery → dbt transformations → Marketing‑style dashboard in Hex → Video walkthrough._
 
 ---
@@ -50,7 +50,7 @@ belgian-brewery/
 │       ├── __init__.py
 │       ├── logger.py
 │       └── errors.py
-├── notebooks/
+├── notebook/
 ├── dashboard/
 ├── requirements.txt
 ├── .gitignore
