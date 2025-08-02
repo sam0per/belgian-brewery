@@ -1,7 +1,7 @@
 # 🍻 Belgian Beers Pipeline & GTM Simulation
 
 **Simulating a go‑to‑market play using scraped + structured beer industry data.  
-Built™ for Glide’s Data Analyst role: Python → BigQuery → dbt → Hex → Narrative.**
+Built for showcasing data analysis skills in Python → BigQuery → dbt → Hex → Actionable Insights.**
 
 ---
 
@@ -13,15 +13,14 @@ Explain the problem: sourcing Belgian beer data to identify potential partnershi
 
 ## 📁 Architecture Diagram
 
-![Architecture Diagram](./architecture.drawio.png) 
-Highlights: Optional LLM via Ollama for name-cleaning, Python scraper layer → Raw tables in BigQuery → dbt transformations → Marketing‑style dashboard in Hex → Video walkthrough._
+![Architecture Diagram](./architecture.drawio.png)
 
 ---
 
 ## 🚦 Data Sources
 
 - **BeerAdvocate**: ratings, styles, brewery names, ABV (scraped reliably)
-- **Kaggle – Beers & Reviews**: clean dataset of beer reviews (~18k distinct beers) :contentReference[oaicite:23]{index=23}
+- **Kaggle – Beers & Reviews**: clean dataset of beer reviews (~18k distinct beers)
 - **Belgenbier / Wikipedia**: list of ~1,200 Belgian breweries with province
 - **Data.gov.be CKAN API**: optional enrichment using tourism or waste data
 
@@ -64,12 +63,28 @@ belgian-brewery/
 Quick start:
 
 ```bash
-python3 -m venv venv && source venv/bin/activate    # activate virtual environment
-pip install -r requirements.txt                     # install dependencies
-python -m src.ingest.beerscraper                    # scrape BeerAdvocate lines
-python -m src.ingest.kagaload                       # load Kaggle CSV to BigQuery
-python -m src.ingest.beerscraper                    # scrape BeerAdvocate lines
-python -m src.ingest.govapi                         # optional enrichment
-python -m src.transform.scoring                     # compute partner score model
-python -m src.util.logger                           # log results
+git clone https://github.com/sam0per/belgian-brewery.git
+cd belgian-brewery
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+
+# Start data ingestion:
+python -m src.ingest.kagaload
+python -m src.ingest.beerscraper --limit 100
+python -m src.ingest.govapi
+
+# Run transformations:
+cd analytics
+dbt seed  # if needed
+dbt run
+dbt test
+
+# Launch dashboard:
+cd dashboard
+streamlit run dashboard.py
+# or open Hex URL in browser
+
+# View and update README:
+nvim README.md  # or your preferred editor
 ```
