@@ -9,12 +9,14 @@ from bs4.element import NavigableString
 import pandas as pd
 import time
 import re
+import os
+from pathlib import Path
 from typing import Optional, Dict, Any, List, Tuple, Union
 from loguru import logger
 
 
 class BeerAdvocateScraper:
-    """Main scraper class for BeerAdvocate top-rated beers."""
+    """Main scraper class for BeerAdvocate beer listings."""
 
     def __init__(self, base_url: str = "https://www.beeradvocate.com/beer/top-rated/"):
         self.base_url = base_url
@@ -24,7 +26,22 @@ class BeerAdvocateScraper:
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
             }
         )
+        
+        # Set up directories relative to project root
+        # Get the project root (2 levels up from src/ingest/)
+        project_root = Path(__file__).parent.parent.parent
+        self.data_dir = project_root / "data" / "raw"
+        self.log_dir = project_root / "logs"
+        self._setup_directories()
+        
         logger.info(f"Initialized scraper for: {base_url}")
+
+    def _setup_directories(self) -> None:
+        """Create necessary directories if they don't exist."""
+        self.data_dir.mkdir(parents=True, exist_ok=True)
+        self.log_dir.mkdir(parents=True, exist_ok=True)
+        logger.info(f"Data directory: {self.data_dir.absolute()}")
+        logger.info(f"Log directory: {self.log_dir.absolute()}")
 
     def fetch_page(self, url: Optional[str] = None) -> Optional[BeautifulSoup]:
         """
@@ -534,35 +551,9 @@ class BeerAdvocateScraper:
         logger.success(f"Successfully extracted {len(all_beers)} beers")
         return all_beers
 
-    def scrape_top_beers(self, save_to_file: bool = True) -> List[Dict[str, Any]]:
+    def _save_to_csv(self, beer_data: List[Dict[str, Any]], filename: str) -> None:
         """
-        Main method to scrape all top-rated beers.
-        
-        Args:
-            save_to_file: Whether to save results to CSV
-            
-        Returns:
-            List of all beer data
-        """
-        logger.info("Starting complete beer data extraction...")
-        
-        soup = self.fetch_page()
-        if not soup:
-            logger.error("Failed to fetch page")
-            return []
-            
-        # Extract all beers
-        all_beers = self.extract_all_beers(soup)
-        
-        if save_to_file and all_beers:
-            self._save_to_csv(all_beers)
-            
-        logger.success(f"Scraping completed. Extracted {len(all_beers)} beers")
-        return all_beers
-        
-    def _save_to_csv(self, beer_data: List[Dict[str, Any]], filename: str = "top_250_beers.csv") -> None:
-        """
-        Save beer data to CSV file.
+        Save beer data to CSV file in the data directory.
         
         Args:
             beer_data: List of beer dictionaries
@@ -581,11 +572,61 @@ class BeerAdvocateScraper:
             available_columns = [col for col in output_columns if col in df.columns]
             df_output = df[available_columns]
             
-            df_output.to_csv(filename, index=False)
-            logger.success(f"Saved {len(beer_data)} beers to {filename}")
+            # Save to data directory
+            filepath = self.data_dir / filename
+            df_output.to_csv(filepath, index=False)
+            logger.success(f"Saved {len(beer_data)} beers to {filepath}")
             
         except Exception as e:
             logger.error(f"Error saving to CSV: {e}")
+
+    def scrape_top_beers(self, save_to_file: bool = True, custom_filename: Optional[str] = None) -> List[Dict[str, Any]]:
+        """
+        Main method to scrape all top-rated beers.
+        
+        Args:
+            save_to_file: Whether to save results to CSV
+            custom_filename: Custom filename for output
+            
+        Returns:
+            List of all beer data
+        """
+        logger.info("Starting complete beer data extraction...")
+        
+        soup = self.fetch_page()
+        if not soup:
+            logger.error("Failed to fetch page")
+            return []
+            
+        # Extract all beers
+        all_beers = self.extract_all_beers(soup)
+        
+        if save_to_file and all_beers:
+            # Determine filename based on URL
+            if custom_filename:
+                filename = custom_filename
+            else:
+                filename = self._get_filename_from_url()
+            self._save_to_csv(all_beers, filename)
+            
+        logger.success(f"Scraping completed. Extracted {len(all_beers)} beers")
+        return all_beers
+
+    def _get_filename_from_url(self) -> str:
+        """
+        Generate appropriate filename based on the URL being scraped.
+        
+        Returns:
+            Filename string
+        """
+        if "top-rated" in self.base_url:
+            return "top_250_beers.csv"
+        elif "popular" in self.base_url:
+            return "popular_beers.csv"
+        elif "worst" in self.base_url:
+            return "worst_beers.csv"
+        else:
+            return "beer_data.csv"
 
     def comprehensive_page_analysis(self) -> Dict[str, Any]:
         """
@@ -671,9 +712,157 @@ class BeerAdvocateScraper:
         return patterns
 
 
+class MultiEndpointScraper:
+    """Scraper for multiple BeerAdvocate endpoints."""
+    
+    ENDPOINTS = {
+        "top_rated": "https://www.beeradvocate.com/beer/top-rated/",
+        "popular": "https://www.beeradvocate.com/beer/popular/",
+        "worst": "https://www.beeradvocate.com/beer/worst/"
+    }
+    
+    def __init__(self):
+        # Set up directories relative to project root
+        # Get the project root (2 levels up from src/ingest/)
+        project_root = Path(__file__).parent.parent.parent
+        self.data_dir = project_root / "data" / "raw"
+        self.log_dir = project_root / "logs"
+        self._setup_directories()
+        
+    def _setup_directories(self) -> None:
+        """Create necessary directories if they don't exist."""
+        self.data_dir.mkdir(parents=True, exist_ok=True)
+        self.log_dir.mkdir(parents=True, exist_ok=True)
+        
+    def setup_logging(self, endpoint_name: str) -> None:
+        """Setup logging for specific endpoint."""
+        log_file = self.log_dir / f"scraper_{endpoint_name}.log"
+        logger.add(log_file, rotation="1 MB", retention="10 days")
+        
+    def scrape_endpoint(self, endpoint_name: str) -> List[Dict[str, Any]]:
+        """
+        Scrape a specific endpoint.
+        
+        Args:
+            endpoint_name: Name of endpoint to scrape
+            
+        Returns:
+            List of beer data
+        """
+        if endpoint_name not in self.ENDPOINTS:
+            logger.error(f"Unknown endpoint: {endpoint_name}")
+            return []
+            
+        url = self.ENDPOINTS[endpoint_name]
+        logger.info(f"Starting scrape of {endpoint_name} endpoint: {url}")
+        
+        # Create scraper for this endpoint
+        scraper = BeerAdvocateScraper(url)
+        
+        # Determine filename
+        filename_mapping = {
+            "top_rated": "top_250_beers.csv",
+            "popular": "popular_beers.csv", 
+            "worst": "worst_beers.csv"
+        }
+        filename = filename_mapping[endpoint_name]
+        
+        # Scrape the data
+        try:
+            beer_data = scraper.scrape_top_beers(save_to_file=True, custom_filename=filename)
+            logger.success(f"Successfully scraped {len(beer_data)} beers from {endpoint_name}")
+            return beer_data
+        except Exception as e:
+            logger.error(f"Error scraping {endpoint_name}: {e}")
+            return []
+            
+    def scrape_all_endpoints(self) -> Dict[str, List[Dict[str, Any]]]:
+        """
+        Scrape all configured endpoints.
+        
+        Returns:
+            Dictionary mapping endpoint names to beer data
+        """
+        all_results = {}
+        
+        for endpoint_name in self.ENDPOINTS.keys():
+            logger.info(f"\n{'='*50}")
+            logger.info(f"SCRAPING {endpoint_name.upper().replace('_', ' ')} BEERS")
+            logger.info(f"{'='*50}")
+            
+            # Setup logging for this endpoint
+            self.setup_logging(endpoint_name)
+            
+            # Scrape the endpoint
+            beer_data = self.scrape_endpoint(endpoint_name)
+            all_results[endpoint_name] = beer_data
+            
+            # Brief pause between endpoints
+            if endpoint_name != list(self.ENDPOINTS.keys())[-1]:  # Not the last one
+                logger.info("Pausing between endpoints...")
+                time.sleep(2)
+                
+        return all_results
+        
+    def generate_summary_report(self, results: Dict[str, List[Dict[str, Any]]]) -> None:
+        """
+        Generate a summary report of all scraped data.
+        
+        Args:
+            results: Dictionary of scraped results
+        """
+        logger.info(f"\n{'='*50}")
+        logger.info("SCRAPING SUMMARY REPORT")
+        logger.info(f"{'='*50}")
+        
+        total_beers = 0
+        for endpoint_name, beer_data in results.items():
+            count = len(beer_data)
+            total_beers += count
+            logger.info(f"{endpoint_name.replace('_', ' ').title()}: {count} beers")
+            
+            # Show sample from each endpoint
+            if beer_data:
+                sample_beer = beer_data[0]
+                logger.info(f"  Sample: #{sample_beer.get('rank', 'N/A')} - "
+                           f"{sample_beer.get('beer_name', 'N/A')} - "
+                           f"{sample_beer.get('brewery', 'N/A')}")
+                           
+        logger.info(f"\nTotal beers scraped: {total_beers}")
+        logger.info(f"Data saved to: {self.data_dir.absolute()}")
+        logger.info(f"Logs saved to: {self.log_dir.absolute()}")
+
+
 def main():
-    """Example usage of the scraper for complete data extraction."""
-    logger.add("scraper_analysis.log", rotation="1 MB")
+    """Main function to scrape all BeerAdvocate endpoints."""
+    # Setup main logging relative to project root
+    project_root = Path(__file__).parent.parent.parent
+    log_dir = project_root / "logs"
+    log_dir.mkdir(parents=True, exist_ok=True)
+    main_log = log_dir / "scraper_main.log"
+    logger.add(main_log, rotation="1 MB", retention="10 days")
+    
+    logger.info("Starting BeerAdvocate multi-endpoint scraper")
+    
+    # Create multi-endpoint scraper
+    multi_scraper = MultiEndpointScraper()
+    
+    # Scrape all endpoints
+    results = multi_scraper.scrape_all_endpoints()
+    
+    # Generate summary report
+    multi_scraper.generate_summary_report(results)
+    
+    logger.info("All scraping completed successfully!")
+
+
+def main_single_analysis():
+    """Original main function for single endpoint analysis."""
+    # Setup logging relative to project root
+    project_root = Path(__file__).parent.parent.parent
+    log_dir = project_root / "logs"
+    log_dir.mkdir(parents=True, exist_ok=True)
+    logger.add(log_dir / "scraper_analysis.log", rotation="1 MB")
 
     scraper = BeerAdvocateScraper()
     
@@ -702,4 +891,8 @@ def main():
 
 
 if __name__ == "__main__":
+    # Run the multi-endpoint scraper by default
     main()
+    
+    # Uncomment the line below and comment out main() above for single endpoint analysis
+    # main_single_analysis()
