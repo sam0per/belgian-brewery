@@ -19,9 +19,9 @@ Explain the problem: sourcing Belgian beer data to identify potential partnershi
 
 ## 🚦 Data Sources
 
-- **BeerAdvocate**: ratings, styles, brewery names, ABV (scraped reliably)
-- **Kaggle – Beers & Reviews**: clean dataset of beer reviews (~18k distinct beers)
-- **Belgenbier / Wikipedia**: list of ~1,200 Belgian breweries with province
+- **BeerAdvocate**: ratings, styles, brewery names, ABV
+- **Kaggle – Beers & Reviews**: clean dataset of beer reviews
+- **Belgenbier / Wikipedia**: list of 500+ Belgian breweries with province and 2000+ beers
 - **Data.gov.be CKAN API**: optional enrichment using tourism or waste data
 
 ---
@@ -31,19 +31,22 @@ Explain the problem: sourcing Belgian beer data to identify potential partnershi
 ```bash
 belgian-brewery/
 ├── README.md
-├── architecture.png
+├── architecture_diagram.png
 ├── data/
 │   ├── kaggle_beer_reviews.csv
-│   └── scraped_breweries.csv
+│   ├── belgenbier.csv
+│   ├── wikipedia_breweries.csv
+│   └── beeradvocate_ratings.csv
 ├── src/
 │   ├── __init__.py
 │   ├── ingest/
 │   │   ├── __init__.py
-│   │   ├── beerscraper.py
-│   │   ├── kagaload.py
-│   │   └── govapi.py
+│   │   ├── beeradvocatescraper.py
+│   │   ├── kaggleapi.py
+│   │   └── belgenbierscraper.py
 │   ├── transform/
 │   │   ├── __init__.py
+│   │   ├── geolocator.py
 │   │   └── scoring.py
 │   └── util/
 │       ├── __init__.py
@@ -53,6 +56,7 @@ belgian-brewery/
 ├── dashboard/
 ├── requirements.txt
 ├── .gitignore
+├── .env
 └── LICENSE
 ```
 
