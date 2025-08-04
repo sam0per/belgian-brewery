@@ -46,6 +46,7 @@ belgian-brewery/
 │   │   └── belgenbierscraper.py
 │   ├── transform/
 │   │   ├── __init__.py
+│   │   ├── bigquery_loader.py
 │   │   ├── geolocator.py
 │   │   └── scoring.py
 │   └── util/
