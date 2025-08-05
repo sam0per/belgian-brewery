@@ -15,9 +15,9 @@ logger.add(
     level="INFO",
 )
 
-INPUT_FILE = Path("data/clean/wiki_be_beers_breweries_provinces.csv")
+INPUT_FILE = Path("data/clean/wiki_be_breweries.csv")
 OUTPUT_FILE = Path(
-    "data/clean/be_brewery_addresses.csv"
+    "data/clean/wiki_be_brewery_addresses.csv"
 )
 
 
