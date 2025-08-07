@@ -32,6 +32,13 @@ Explain the problem: sourcing Belgian beer data to identify potential partnershi
 belgian-brewery/
 ├── README.md
 ├── architecture_diagram.png
+├── bebrew/
+│   ├── models/
+│   │   ├── staging/
+│   │   │   ├── webscrape/
+│   │   │   │   ├── _webscrape__models.yml
+│   │   │   │   └── ...
+│   │   └── ...
 ├── data/
 │   ├── kaggle_beer_reviews.csv
 │   ├── belgenbier.csv
@@ -42,17 +49,17 @@ belgian-brewery/
 │   ├── ingest/
 │   │   ├── __init__.py
 │   │   ├── beeradvocatescraper.py
-│   │   ├── kaggleapi.py
-│   │   └── belgenbierscraper.py
+│   │   ├── belgenbierscraper.py
+│   │   └── kagglescraper.py
 │   ├── transform/
 │   │   ├── __init__.py
 │   │   ├── bigquery_loader.py
-│   │   ├── geolocator.py
-│   │   └── scoring.py
+│   │   ├── geodata_catcher.py
+│   │   ├── llm_geocoder.py
+│   │   └── wiki_brewery_cleaner.py
 │   └── util/
 │       ├── __init__.py
-│       ├── logger.py
-│       └── errors.py
+│       └── ...
 ├── notebook/
 ├── dashboard/
 ├── requirements.txt
@@ -75,21 +82,20 @@ source venv/bin/activate
 pip install -r requirements.txt
 
 # Start data ingestion:
-python -m src.ingest.kagaload
-python -m src.ingest.beerscraper --limit 100
-python -m src.ingest.govapi
+python src/ingest/beeradvocatescraper.py
+python src/ingest/belgenbierscraper.py
+python src/ingest/kagglescraper.py
 
-# Run transformations:
-cd analytics
-dbt seed  # if needed
+# Add geolocation data:
+python src/transform/geodata_catcher.py
+python src/transform/llm_geocoder.py
+python src/transform/wiki_brewery_cleaner.py
+
+# Load data into BigQuery:
+python src/transform/bigquery_loader.py
+
+# Run transformations in dbt:
+cd bebrew
 dbt run
 dbt test
-
-# Launch dashboard:
-cd dashboard
-streamlit run dashboard.py
-# or open Hex URL in browser
-
-# View and update README:
-nvim README.md  # or your preferred editor
 ```
