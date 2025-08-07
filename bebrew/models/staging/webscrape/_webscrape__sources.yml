@@ -1,0 +1,12 @@
+version: 2
+
+sources:
+  - name: webscrape
+    description: "Source data scraped from various web pages"
+    database: belgian-brew
+    schema: BE_beers_breweries_province
+    tables:
+      - name: wiki_be_beers
+      - name: wiki_be_breweries
+      - name: wiki_be_brewery_addresses
+      - name: top_250_beers

@@ -6,4 +6,9 @@ src/ingest/top_250_beers.csv
 src/ingest/scraper_analysis.log
 logs/*.log
 data/*
-bebrew/
+bebrew/analyses/
+bebrew/dbt_packages/
+bebrew/logs/
+bebrew/macros/
+bebrew/models_example/
+bebrew/README.md

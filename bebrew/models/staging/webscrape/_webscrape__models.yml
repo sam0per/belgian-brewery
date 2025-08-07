@@ -1,0 +1,10 @@
+version: 2
+
+models:
+  - name: stg_webscrape__addresses
+    description: "Staging model for web scraped brewery addresses"
+    columns:
+      - name: brewery_name
+        description: "Name of the brewery"
+        data_tests:
+          - not_null
