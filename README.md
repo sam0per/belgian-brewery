@@ -1,6 +1,6 @@
-# 🍻 Belgian Beers Pipeline & GTM Simulation
+# 🍻 Belgian Beers and Breweries Go-To-Market
 
-**Simulating a go‑to‑market play using scraped + structured beer industry data.  
+**Running go‑to‑market pipeline using scraped + structured beer industry data.  
 Built for showcasing data analysis skills in Python → BigQuery → dbt → Hex → Actionable Insights.**
 
 ---
