@@ -7,7 +7,7 @@ Built for showcasing data analysis skills in Python → BigQuery → dbt → Hex
 
 ## 🎯 Project Overview
 
-Explain the problem: sourcing Belgian beer data to identify potential partnership regions, high-quality breweries, and strategic recommendations—just like Glide would segment users or target expansion regions.
+Sourcing Belgian beer data to identify potential partnership regions, high-quality breweries, and strategic recommendations—just like Glide would segment users or target expansion regions.
 
 ---
 
@@ -23,6 +23,14 @@ Explain the problem: sourcing Belgian beer data to identify potential partnershi
 - **Kaggle – Beers & Reviews**: clean dataset of beer reviews
 - **Belgenbier / Wikipedia**: list of 500+ Belgian breweries with province and 2000+ beers
 - **Data.gov.be CKAN API**: optional enrichment using tourism or waste data
+
+---
+
+## 📊 Hex Dashboard
+
+The Hex dashboard provides an interactive interface for users to explore the brewery data, filter by breweries with the largest variety of beers, and gain insights into potential partnerships.
+
+![Hex Dashboard](./img/hex_app.png)
 
 ---
 
