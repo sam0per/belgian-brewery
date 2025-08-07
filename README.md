@@ -30,7 +30,7 @@ Sourcing Belgian beer data to identify potential partnership regions, high-quali
 
 The Hex dashboard provides an interactive interface for users to explore the brewery data, filter by breweries with the largest variety of beers, and gain insights into potential partnerships.
 
-![Hex Dashboard](./img/hex_app.png)
+![Hex Dashboard](./hex_app.png)
 
 ---
 
