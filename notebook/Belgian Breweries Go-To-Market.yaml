@@ -1,0 +1,1067 @@
+schemaVersion: 3
+meta:
+  sourceVersionId: 0198804d-18dc-7000-97e0-bdb5d51bd5ce # DO NOT CHANGE - Hex uses this to match up project versions when reimporting the file
+  description: This project is a portfolio showcase designed to demonstrate that I, an experienced data analyst, possess all the required and preferred skills listed in the open Data Analyst position at Glide. The goal is to create a full-cycle analytics project that closely reflects the tools, thinking, and impact expected of a Glide data analyst.
+  projectId: 01987e8f-0ce0-7000-b0e1-43a73a106aa8 # DO NOT CHANGE - Unique ID of the project from which this file was generated
+  title: Belgian Breweries Go-To-Market
+  timezone: null
+  appTheme: SYS_PREF
+  codeLanguage: PYTHON
+  status:
+    name: In development
+  categories:
+    - name: Dashboard
+    - name: Marketing
+  castDecimalsDefault: true
+  logicQueryCacheTimeout: null
+  publishedQueryCacheTimeout: null
+  hexType: PROJECT
+  allowExecutionReordering: true
+  prerunApp: false
+  cachePublishedAppState: true
+  refreshStalePublishedApp: false
+  autoRerunApp: true
+projectAssets:
+  dataConnections: []
+  envVars: []
+  secrets: []
+sharedAssets:
+  secrets: []
+  vcsPackages: []
+  dataConnections:
+    - dataConnectionId: 01987eae-e7e7-7001-8977-a5139b17978e # belgian-breweries (bigquery)
+  externalFileIntegrations: []
+cells:
+  - cellType: MARKDOWN
+    cellId: 01988027-0a5e-7338-9b7f-d73e3da77bb7 # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: null
+    config:
+      source: |-
+        ### What are the breweries with the highest number of beers?
+        ### In which Belgian province are these breweries located?
+  - cellType: BLOCK
+    cellId: 01987eb5-6365-7338-9b01-af65f052ada4 # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: null
+    config:
+      blockConfig:
+        sqlCellId: 01987eae-f4d8-7338-9aff-3c0994e76e10
+        chartCellId: 01987eb5-6365-7338-9b01-97fb3cbc420b
+        activeTab: display
+      cells:
+        - cellType: SQL
+          cellId: 01987eae-f4d8-7338-9aff-3c0994e76e10
+          cellLabel: Count of beers by brewery
+          config:
+            source: |
+              select
+                  case when ad.province is null then 'Brussels' else ad.province end as province,
+                  be.brewery_name,
+                  count(*) as beer_count
+              from `BE_beers_breweries_province`.stg_webscrape__beers be
+              left join `BE_beers_breweries_province`.stg_webscrape__addresses ad
+              on lower(be.brewery_name) = lower(ad.brewery_name)
+              where ad.municipality is not null
+              group by be.brewery_name, ad.province
+              order by 3 desc
+              -- limit 10
+            dataFrameCell: false
+            dataConnectionId: 01987eae-e7e7-7001-8977-a5139b17978e
+            resultVariableName: dataframe
+            useRichDisplay: true
+            sqlCellOutputType: PANDAS
+            useQueryMode: false
+            castDecimals: true
+            useNativeDates: true
+            outputFilteredResult: true
+            allowDuplicateColumns: false
+            tableDisplayConfig:
+              pageSize: 50
+              height: null
+              hideIcons: false
+              defaultColumnWidth: null
+              hideIndex: false
+              defaultSortColumn: null
+              defaultSortIndexColumn: null
+              defaultSortDirection: ASC
+              conditionalFormatting: null
+              calcs: null
+              filters: null
+              columnProperties:
+                - originalName: abv_percentage
+                  renameTo: null
+                  size: null
+                  wrapText: null
+                  displayFormat: null
+                - originalName: beer_count
+                  renameTo: null
+                  size: 112
+                  wrapText: null
+                  displayFormat: null
+                - originalName: beer_name
+                  renameTo: null
+                  size: null
+                  wrapText: null
+                  displayFormat: null
+                - originalName: beer_style_first
+                  renameTo: null
+                  size: null
+                  wrapText: null
+                  displayFormat: null
+                - originalName: beer_style_second
+                  renameTo: null
+                  size: null
+                  wrapText: null
+                  displayFormat: null
+                - originalName: beer_style_third
+                  renameTo: null
+                  size: null
+                  wrapText: null
+                  displayFormat: null
+                - originalName: brewery_name
+                  renameTo: null
+                  size: 191
+                  wrapText: null
+                  displayFormat: null
+                - originalName: province
+                  renameTo: null
+                  size: 125
+                  wrapText: null
+                  displayFormat: null
+                - originalName: row-index-0
+                  renameTo: null
+                  size: 46
+                  wrapText: null
+                  displayFormat: null
+              columnOrdering: null
+              customColumnOrdering: null
+              pinnedColumns: null
+              hiddenColumns: null
+              pinIndexColumns: false
+              showAggregations: false
+              columnAggregations: null
+        - cellType: CHARTV2
+          cellId: 01987eb5-6365-7338-9b01-97fb3cbc420b
+          cellLabel: Count of beers by brewery
+          config:
+            height: 506
+            chartSpec:
+              type: layered
+              layers:
+                - id: 01987eb5-6364-7338-9b01-6c9f3b6b6dd5
+                  xAxis:
+                    sort: descending
+                    type: string
+                    style:
+                      grid:
+                        style: none
+                      ticks: {}
+                      labels: {}
+                    hideTitle: true
+                    dataFrameColumn: brewery_name
+                  series:
+                    - id: 01987eb5-679e-7338-9b02-09d091623f6a
+                      type: bar
+                      axis:
+                        type: number
+                        style:
+                          grid:
+                            style: none
+                          zero: true
+                          ticks: {}
+                          labels: {}
+                        hideTitle: true
+                        numberFormat:
+                          format: NUMBER
+                          currency: USD
+                          columnType: NUMBER
+                          showSeparators: false
+                          numDecimalDigits: -1
+                          abbreviateLargeNumbers: false
+                      dataFrameColumns:
+                        - _HEX_COUNT_STAR_ARG_
+                      colorOrder: ascending
+                      color:
+                        type: static
+                      opacity:
+                        type: static
+                        value: 1
+                      tooltip:
+                        type: auto
+                      dataLabels:
+                        position: inside-end
+                      barWidth: 1
+                      orientation: horizontal
+                      layout: stacked
+                  dataFrame: dataframe
+              settings:
+                font:
+                  baseSize: 15
+                legend:
+                  position: right
+                tooltip: true
+                baseAxisSize: container
+                selectionEnabled: false
+            chartSelection: {}
+            colorMappings: {}
+            resultVariable: chart_result
+            outputResult: false
+            displayType: CHART
+            displayTableConfig: null
+  - cellType: MARKDOWN
+    cellId: 0198802c-c71d-7338-9b81-3c3f12817347 # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: null
+    config:
+      source: "**Use the slider below to select the number of breweries to visualize**"
+  - cellType: INPUT
+    cellId: 01987fe2-2505-7338-9b5e-ad43f290670a # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: Top breweries
+    config:
+      inputType: SLIDER
+      name: top_breweries
+      outputType: NUMBER
+      options:
+        min: 1
+        max: 10
+        step: 1
+      defaultValue: 5
+  - cellType: CODE
+    cellId: 01987fe4-c4d8-7338-9b5f-81e2f6228ac4 # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: null
+    config:
+      source: |-
+        # Get the top breweries by beer count
+        top_breweries_beer_count = dataframe.sort_values("beer_count", ascending=False).head(top_breweries)
+  - cellType: CHARTV2
+    cellId: 01987f7f-4380-7338-9b2a-8e5bf8a2d22d # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: Breweries with the largest variety of beers (colored by province)
+    config:
+      height: 375
+      chartSpec:
+        type: layered
+        layers:
+          - id: 01987f7f-437f-7338-9b2a-65df56b76cc4
+            xAxis:
+              sort: -x
+              type: string
+              style:
+                grid:
+                  style: none
+                ticks: {}
+                labels: {}
+              title: Brewery name
+              hideTitle: true
+              dataFrameColumn: brewery_name
+            series:
+              - id: 01987f7f-47ee-7338-9b2a-b13ae93f1134
+                type: bar
+                axis:
+                  type: number
+                  style:
+                    grid:
+                      style: solid
+                    ticks:
+                      count: 0
+                    labels: {}
+                  title: Number of beers
+                  aggregate: sum
+                  hideTitle: true
+                  numberFormat:
+                    format: NUMBER
+                    currency: USD
+                    columnType: NUMBER
+                    showSeparators: false
+                    numDecimalDigits: -1
+                    abbreviateLargeNumbers: false
+                dataFrameColumns:
+                  - beer_count
+                colorDataFrameColumn: province
+                colorOrder:
+                  - De Proefbrouwerij
+                  - Brouwerij Huyghe
+                  - De Struise Brouwers
+                  - Brouwerij Van Steenberge
+                  - Alken-Maes
+                color:
+                  type: series
+                  dataType: string
+                  defaultColor: "#4C78A8"
+                  colorsBySeriesValues:
+                    Namur: "#72B7B2"
+                    Limburg: "#54A24B"
+                    Brussels: "#EECA3B"
+                    Oost-Vlaanderen: "#B279A2"
+                    West-Vlaanderen: "#4C78A8"
+                opacity:
+                  type: static
+                  value: 1
+                tooltip:
+                  type: auto
+                totalDataLabels:
+                  position: outside-end
+                legendTitle: Province
+                barWidth: 1
+                orientation: horizontal
+                layout: stacked
+            dataFrame: top_breweries_beer_count
+        settings:
+          font:
+            baseSize: 15
+          legend:
+            position: right
+          tooltip: true
+          selectionEnabled: false
+      chartSelection: {}
+      colorMappings:
+        "null": "#4C78A8"
+        Namur: "#E45756"
+        Liège: "#54A24B"
+        Hainaut: "#EECA3B"
+        Limburg: "#4C78A8"
+        Brussels: "#4C78A8"
+        province: "#54A24B"
+        Antwerpen: "#FF9DA6"
+        Alken-Maes: "#BAB0AC"
+        Luxembourg: "#72B7B2"
+        beer_count: "#72B7B2"
+        Brabant wallon: "#B279A2"
+        Vlaams-Brabant: "#F58518"
+        Oost-Vlaanderen: "#F58518"
+        West-Vlaanderen: "#E45756"
+        Brouwerij Huyghe: "#B279A2"
+        De Proefbrouwerij: "#EECA3B"
+        De Struise Brouwers: "#FF9DA6"
+        Brouwerij Van Steenberge: "#9D755D"
+      resultVariable: chart_result_2
+      outputResult: true
+      displayType: CHART
+      displayTableConfig:
+        pageSize: 50
+        height: null
+        hideIcons: false
+        defaultColumnWidth: null
+        hideIndex: false
+        defaultSortColumn: null
+        defaultSortIndexColumn: null
+        defaultSortDirection: ASC
+        conditionalFormatting: null
+        calcs: null
+        filters: []
+        columnProperties: []
+        columnOrdering: null
+        customColumnOrdering: null
+        pinnedColumns: null
+        hiddenColumns: null
+        pinIndexColumns: false
+        showAggregations: false
+        columnAggregations: null
+  - cellType: MARKDOWN
+    cellId: 01988033-2fe1-7338-9b89-690196bbf602 # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: null
+    config:
+      source: |-
+        ### How many breweries have we geolocated?
+        ### How many beers are produced by the geolocated breweries?
+  - cellType: CODE
+    cellId: 01987ec6-4d9b-7338-9b07-5235aa5fc35e # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: Number of breweries
+    config:
+      source: |-
+        # Get the number of unique breweries with a valid province
+        valid_breweries = dataframe[dataframe['province'].notnull()]
+
+        brewery_count = valid_breweries['brewery_name'].nunique()
+  - cellType: METRIC
+    cellId: 01987ec8-7b15-7338-9b08-9ed1dca9ea4d # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: null
+    config:
+      title: famous Belgian breweries
+      valueVariableName: brewery_count
+      showComparison: true
+      comparisonType: VALUE
+      comparisonVariableName: dataframe
+      comparisonFormat: null
+      comparisonLabel: provinces
+      displayFormat: null
+      valueColumn: null
+      valueRowIndex: 0
+      valueAggregate: null
+      comparisonColumn: province
+      comparisonRowIndex: null
+      comparisonAggregate: CountDistinct
+      valueResultVariable: null
+      comparisonResultVariable: null
+      outputResult: false
+  - cellType: METRIC
+    cellId: 01987fdc-013e-7338-9b5a-9bb93d912126 # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: null
+    config:
+      title: beer names
+      valueVariableName: dataframe
+      showComparison: false
+      comparisonType: VALUE
+      comparisonVariableName: null
+      comparisonFormat: null
+      comparisonLabel: null
+      displayFormat:
+        format: NUMBER
+        currency: USD
+        columnType: NUMBER
+        showSeparators: true
+        numDecimalDigits: 1
+        abbreviateLargeNumbers: true
+      valueColumn: beer_count
+      valueRowIndex: null
+      valueAggregate: Sum
+      comparisonColumn: null
+      comparisonRowIndex: null
+      comparisonAggregate: null
+      valueResultVariable: value_4
+      comparisonResultVariable: comparison_value_2
+      outputResult: true
+  - cellType: CODE
+    cellId: 01987f8e-650d-7338-9b2d-b1c0b56c6453 # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: null
+    config:
+      source: |-
+        # Count the number of breweries per province
+        province_brewery_counts = dataframe.groupby('province').brewery_name.nunique().reset_index()
+        province_brewery_counts = province_brewery_counts.rename(columns={'brewery_name': 'brewery_count'})
+        province_brewery_counts.sort_values('brewery_count', ascending=False)
+  - cellType: SQL
+    cellId: 01987f25-a250-7338-9b17-a0cbf88e0627 # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: number of breweries by province
+    config:
+      source: |-
+        with beer_count as (
+        select
+            be.brewery_name,
+            ad.province,
+            count(*) as beer_count
+        from `BE_beers_breweries_province`.stg_webscrape__beers as be
+        left join `BE_beers_breweries_province`.stg_webscrape__addresses as ad
+            on lower(be.brewery_name) = lower(ad.brewery_name)
+        where ad.province is not null
+        group by 1, 2
+        order by count(*) desc
+        )
+
+        select
+            province,
+            count(*) as brewery_count
+        from beer_count
+        group by 1
+        order by count(*) desc
+      dataFrameCell: false
+      dataConnectionId: 01987eae-e7e7-7001-8977-a5139b17978e
+      resultVariableName: dataframe_7
+      useRichDisplay: true
+      sqlCellOutputType: PANDAS
+      useQueryMode: false
+      castDecimals: true
+      useNativeDates: true
+      outputFilteredResult: true
+      allowDuplicateColumns: false
+      tableDisplayConfig:
+        pageSize: 50
+        height: null
+        hideIcons: false
+        defaultColumnWidth: null
+        hideIndex: false
+        defaultSortColumn: null
+        defaultSortIndexColumn: null
+        defaultSortDirection: ASC
+        conditionalFormatting: null
+        calcs: null
+        filters: null
+        columnProperties:
+          - originalName: beer_count
+            renameTo: null
+            size: 112
+            wrapText: null
+            displayFormat: null
+          - originalName: beer_name
+            renameTo: null
+            size: 150
+            wrapText: null
+            displayFormat: null
+          - originalName: brewery_count
+            renameTo: null
+            size: 132
+            wrapText: null
+            displayFormat: null
+          - originalName: brewery_name
+            renameTo: null
+            size: 133
+            wrapText: null
+            displayFormat: null
+          - originalName: province
+            renameTo: null
+            size: 119
+            wrapText: null
+            displayFormat: null
+          - originalName: row-index-0
+            renameTo: null
+            size: 46
+            wrapText: null
+            displayFormat: null
+        columnOrdering: null
+        customColumnOrdering: null
+        pinnedColumns: null
+        hiddenColumns: null
+        pinIndexColumns: false
+        showAggregations: false
+        columnAggregations: null
+  - cellType: CODE
+    cellId: 01987f3f-950e-7338-9b26-b5d5a1278913 # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: Min max breweries
+    config:
+      source: |-
+        # Get the min and max brewery count
+        min_breweries = dataframe_7['brewery_count'].min()
+        max_breweries = dataframe_7['brewery_count'].max()
+
+        # Concatenate the min and max values into a string
+        min_max_breweries = f"- {max_breweries}"
+  - cellType: METRIC
+    cellId: 01987f3a-5c84-7338-9b24-eaa73a6eaea4 # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: null
+    config:
+      title: "Avg # of breweries by province"
+      valueVariableName: dataframe_7
+      showComparison: true
+      comparisonType: VALUE
+      comparisonVariableName: min_breweries
+      comparisonFormat: null
+      comparisonLabel: "{{ min_max_breweries }} is the min and max"
+      displayFormat:
+        format: NUMBER
+        currency: USD
+        columnType: NUMBER
+        showSeparators: false
+        numDecimalDigits: 0
+        abbreviateLargeNumbers: false
+      valueColumn: brewery_count
+      valueRowIndex: null
+      valueAggregate: Avg
+      comparisonColumn: null
+      comparisonRowIndex: null
+      comparisonAggregate: null
+      valueResultVariable: value_3
+      comparisonResultVariable: comparison_value
+      outputResult: true
+  - cellType: MARKDOWN
+    cellId: 01988034-904d-7338-9b8a-1c4c13a5b755 # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: null
+    config:
+      source: |-
+        ### Which breweries produce the best rated beers?
+        ### In which provinces are these breweries located?
+  - cellType: SQL
+    cellId: 01987eb7-d7eb-7338-9b02-7c17ee2f694f # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: best rated beers by brewery
+    config:
+      source: |-
+        select
+            case when be.brewery_name like '%Cantillon' then 'Brasserie Cantillon' else be.brewery_name end as brewery_name,
+            round(avg(br.average_rating),2) as average_rating,
+            sum(dataframe.beer_count) as beer_count,
+            max(ad.latitude) as latitude,
+            max(ad.longitude) as longitude,
+            ad.municipality,
+            ad.postcode,
+            case when ad.province is null and ad.municipality is not null then 'Brussels' else ad.province end as province
+        from `BE_beers_breweries_province`.stg_webscrape__beers as be
+        inner join `BE_beers_breweries_province`.stg_webscrape__beer_ratings as br
+            on lower(be.beer_name) = lower(br.beer_name)
+        left join dataframe
+            on lower(be.brewery_name) = lower(dataframe.brewery_name)
+        left join `BE_beers_breweries_province`.stg_webscrape__addresses as ad
+            on lower(be.brewery_name) = lower(ad.brewery_name)
+        group by 1, 6, 7, 8
+      dataFrameCell: false
+      dataConnectionId: 01987eae-e7e7-7001-8977-a5139b17978e
+      resultVariableName: dataframe_2
+      useRichDisplay: true
+      sqlCellOutputType: PANDAS
+      useQueryMode: false
+      castDecimals: true
+      useNativeDates: true
+      outputFilteredResult: true
+      allowDuplicateColumns: false
+      tableDisplayConfig:
+        pageSize: 50
+        height: 349
+        hideIcons: false
+        defaultColumnWidth: null
+        hideIndex: false
+        defaultSortColumn: average_rating
+        defaultSortIndexColumn: null
+        defaultSortDirection: DESC
+        conditionalFormatting: null
+        calcs: null
+        filters: null
+        columnProperties:
+          - originalName: average_rating
+            renameTo: null
+            size: 131
+            wrapText: null
+            displayFormat: null
+          - originalName: beer_count
+            renameTo: null
+            size: 112
+            wrapText: null
+            displayFormat: null
+          - originalName: beer_name
+            renameTo: null
+            size: 307
+            wrapText: null
+            displayFormat: null
+          - originalName: brewery_name
+            renameTo: null
+            size: 239
+            wrapText: null
+            displayFormat: null
+          - originalName: latitude
+            renameTo: null
+            size: 100
+            wrapText: null
+            displayFormat: null
+          - originalName: longitude
+            renameTo: null
+            size: 103
+            wrapText: null
+            displayFormat: null
+          - originalName: municipality
+            renameTo: null
+            size: 118
+            wrapText: null
+            displayFormat: null
+          - originalName: postcode
+            renameTo: null
+            size: 102
+            wrapText: null
+            displayFormat: null
+          - originalName: province
+            renameTo: null
+            size: 125
+            wrapText: null
+            displayFormat: null
+          - originalName: ratings
+            renameTo: null
+            size: 89
+            wrapText: null
+            displayFormat: null
+          - originalName: row-index-0
+            renameTo: null
+            size: 39
+            wrapText: null
+            displayFormat: null
+        columnOrdering: null
+        customColumnOrdering: null
+        pinnedColumns: null
+        hiddenColumns: null
+        pinIndexColumns: false
+        showAggregations: false
+        columnAggregations: null
+  - cellType: CODE
+    cellId: 01988036-13cd-7338-9b8b-198d77a7fd46 # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: null
+    config:
+      source: |-
+        import pandas as pd
+        import math
+
+        def generate_star_rating(rating: float, max_rating: int = 5) -> str:
+            """
+            Generates a string of star characters to represent a numerical rating.
+            This function handles full stars, half stars, and empty stars.
+            """
+            # Define the Unicode characters for the stars
+            FULL_STAR = "★"
+            HALF_STAR = "✬"
+            EMPTY_STAR = "☆"
+
+            # Clamp the rating to be within the valid range (0 to max_rating)
+            rating = max(0, min(max_rating, rating))
+
+            # Round the rating to the nearest 0.5
+            rounded_rating = round(rating * 2) / 2
+
+            # Calculate the number of each type of star
+            full_stars = int(rounded_rating)
+            has_half_star = rounded_rating - full_stars >= 0.5
+            empty_stars = max_rating - full_stars - (1 if has_half_star else 0)
+
+            # Combine the star characters into a single string
+            star_string = (FULL_STAR * full_stars) + \
+                          (HALF_STAR if has_half_star else "") + \
+                          (EMPTY_STAR * empty_stars)
+                          
+            return star_string
+
+        # --- Main Program ---
+        if __name__ == "__main__":
+
+            # 2. Apply the function to the 'rating' column
+            # The .apply() method runs the generate_star_rating function for every
+            # value in the 'rating' column. The results are stored in a new column
+            # called 'stars'.
+            dataframe_2['stars'] = dataframe_2['average_rating'].apply(generate_star_rating)
+
+            # 3. Display the final result
+            # We can drop the original numerical rating column if we only want to show the stars
+            df_with_stars = dataframe_2[['brewery_name', 'stars']]
+            
+            print("--- Brewery Ratings with Stars ---")
+            # Using .to_string(index=False) provides a cleaner output format
+            print(df_with_stars.to_string(index=False))
+  - cellType: TABLE_DISPLAY
+    cellId: 0198803a-8c4c-7338-9b8c-5f7c3f75c4d4 # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: null
+    config:
+      dataFrameVariableName: df_with_stars
+      resultVariable: table_result_3
+      tableDisplayConfig:
+        pageSize: 50
+        height: null
+        hideIcons: false
+        defaultColumnWidth: null
+        hideIndex: false
+        defaultSortColumn: null
+        defaultSortIndexColumn: null
+        defaultSortDirection: ASC
+        conditionalFormatting: null
+        calcs: null
+        filters: null
+        columnProperties:
+          - originalName: brewery_name
+            renameTo: null
+            size: 211
+            wrapText: null
+            displayFormat: null
+          - originalName: row-index-0
+            renameTo: null
+            size: 46
+            wrapText: null
+            displayFormat: null
+          - originalName: stars
+            renameTo: null
+            size: 91
+            wrapText: null
+            displayFormat: null
+        columnOrdering: null
+        customColumnOrdering: null
+        pinnedColumns: null
+        hiddenColumns: null
+        pinIndexColumns: false
+        showAggregations: false
+        columnAggregations: null
+  - cellType: SQL
+    cellId: 01987fa4-cc91-7338-9b35-cdc23b0f3823 # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: municipality by population
+    config:
+      source: |
+        select
+            municipality_name,
+            population_count
+        from `BE_beers_breweries_province`.stg_webscrape__municipalities_population
+      dataFrameCell: false
+      dataConnectionId: 01987eae-e7e7-7001-8977-a5139b17978e
+      resultVariableName: dataframe_8
+      useRichDisplay: true
+      sqlCellOutputType: PANDAS
+      useQueryMode: false
+      castDecimals: true
+      useNativeDates: true
+      outputFilteredResult: true
+      allowDuplicateColumns: false
+      tableDisplayConfig:
+        pageSize: 50
+        height: null
+        hideIcons: false
+        defaultColumnWidth: null
+        hideIndex: false
+        defaultSortColumn: null
+        defaultSortIndexColumn: null
+        defaultSortDirection: ASC
+        conditionalFormatting: null
+        calcs: null
+        filters: null
+        columnProperties:
+          - originalName: last_updated
+            renameTo: null
+            size: 123
+            wrapText: null
+            displayFormat: null
+          - originalName: municipality_name
+            renameTo: null
+            size: 157
+            wrapText: null
+            displayFormat: null
+          - originalName: population_count
+            renameTo: null
+            size: 146
+            wrapText: null
+            displayFormat: null
+          - originalName: province_name
+            renameTo: null
+            size: 135
+            wrapText: null
+            displayFormat: null
+          - originalName: region_name
+            renameTo: null
+            size: 123
+            wrapText: null
+            displayFormat: null
+          - originalName: row-index-0
+            renameTo: null
+            size: 46
+            wrapText: null
+            displayFormat: null
+        columnOrdering: null
+        customColumnOrdering: null
+        pinnedColumns: null
+        hiddenColumns: null
+        pinIndexColumns: false
+        showAggregations: false
+        columnAggregations: null
+  - cellType: CODE
+    cellId: 01987fba-f6ae-7338-9b3c-111c73d82c5a # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: get latitude and longitute for municipality
+    config:
+      source: |-
+        import time
+        from typing import List, Dict, Any
+
+        import pandas as pd
+        from geopy.geocoders import Nominatim
+        from tqdm import tqdm
+
+
+        def get_coordinates_for_municipalities(municipalities: List[str]) -> List[Dict[str, Any]]:
+            """
+            Gets the latitude and longitude for a list of Belgian municipalities.
+
+            Args:
+                municipalities: A list of Belgian municipality names (e.g., ["Brussels", "Namur"]).
+
+            Returns:
+                A list of dictionaries, where each dictionary contains the municipality
+                name, its latitude, and its longitude. Returns None for coordinates
+                if a municipality cannot be found.
+            """
+            # Initialize the Nominatim geocoder with a unique user_agent
+            geolocator = Nominatim(user_agent="belgian_municipality_finder_1.0")
+            
+            results = []
+            print(f"Finding coordinates for {len(municipalities)} municipalities...")
+
+            # Use tqdm for a user-friendly progress bar
+            for municipality in tqdm(municipalities, desc="Geocoding Municipalities"):
+                try:
+                    # Append ", Belgium" to the query to increase accuracy
+                    query = f"{municipality}, Belgium"
+                    
+                    location = geolocator.geocode(query, timeout=10)
+
+                    # --- IMPORTANT: Respect Nominatim's Usage Policy ---
+                    # Make only 1 request per second to avoid being blocked.
+                    time.sleep(1)
+
+                    if location:
+                        results.append({
+                            "municipality": municipality,
+                            "latitude": location.latitude,
+                            "longitude": location.longitude
+                        })
+                    else:
+                        # Handle cases where the municipality is not found
+                        results.append({
+                            "municipality": municipality,
+                            "latitude": None,
+                            "longitude": None
+                        })
+                except Exception as e:
+                    print(f"An error occurred for {municipality}: {e}")
+                    results.append({
+                        "municipality": municipality,
+                        "latitude": None,
+                        "longitude": None
+                    })
+                    
+            return results
+
+        # --- Example Usage ---
+        if __name__ == "__main__":
+            # A list of Belgian municipalities to test the function
+            belgian_cities = dataframe_8['municipality_name'].unique()
+
+            # Get the coordinates
+            coordinates_data = get_coordinates_for_municipalities(belgian_cities)
+
+            # Display the results in a clean table using pandas
+            if coordinates_data:
+                df = pd.DataFrame(coordinates_data)
+                print("\n--- Geocoding Results ---")
+                print(df.to_string(index=False))
+  - cellType: MAP
+    cellId: 01987f9d-4ebd-7338-9b33-fa58d574d553 # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: Breweries based on beer ratings
+    config:
+      height: 520
+      map:
+        theme: hex
+        layers:
+          - id: 01987fbe-9e9c-7338-9b3c-aae8883266e6
+            data:
+              coordinates:
+                system: latlng_separate
+                dataFrameLatColumn: latitude
+                dataFrameLngColumn: longitude
+              dataFrameName: df
+            fill:
+              type: dynamic
+              colors:
+                - - 170
+                  - 227
+                  - 238
+                - - 242
+                  - 184
+                  - 36
+                - - 200
+                  - 70
+                  - 84
+              opacity: 1
+            name: Pop count
+            size: 26
+            type: heatmap
+            opacity: 0.6
+            visible: true
+            aggregationType: SUM
+            tooltipDataFrameColumns: []
+          - id: 01987f9d-4ebc-7338-9b33-ed3177ff3c6d
+            data:
+              coordinates:
+                system: latlng_separate
+                dataFrameLatColumn: latitude
+                dataFrameLngColumn: longitude
+              dataFrameName: dataframe_2
+            fill:
+              type: dynamic
+              colors:
+                - - 255
+                  - 255
+                  - 255
+                - - 41
+                  - 160
+                  - 124
+                - - 6
+                  - 76
+                  - 20
+              opacity: 0.75
+              dataFrameColumn: average_rating
+            name: Brewery location
+            type: scatter
+            radius:
+              max: 83
+              min: 25
+              type: dynamic
+              dataFrameColumn: beer_count
+            opacity: 0.6
+            outline:
+              color:
+                - 17
+                - 20
+                - 24
+              width: 20
+            visible: true
+            tooltipDataFrameColumns:
+              - brewery_name
+              - average_rating
+              - beer_count
+              - municipality
+              - province
+        initialView:
+          zoom: 7.506691839267384
+          pitch: 0
+          width: 1469
+          height: 520
+          bearing: 0
+          maxZoom: 20
+          minZoom: 0
+          altitude: 1.5
+          latitude: 50.735137100598614
+          maxPitch: 60
+          minPitch: 0
+          position:
+            - 0
+            - 0
+            - 0
+          longitude: 3.9294845499999935
+          normalize: true
+        isLegendOpen: false
+appLayout:
+  visibleMetadataFields:
+    - NAME
+    - DESCRIPTION
+    - AUTHOR
+    - LAST_EDITED
+    - LAST_RUN
+    - CATEGORIES
+    - STATUS
+    - TABLE_OF_CONTENTS
+  fullWidth: false
+  tabs:
+    - name: Tab 1
+      rows:
+        - columns:
+            - start: 90
+              end: 120
+              elements:
+                - showSource: false
+                  hideOutput: false
+                  type: CELL
+                  cellId: 01987fe2-2505-7338-9b5e-ad43f290670a
+                  sharedFilterId: null
+                  height: null
+                  showLabel: true
+        - columns:
+            - start: 0
+              end: 25
+              elements:
+                - showSource: false
+                  hideOutput: false
+                  type: CELL
+                  cellId: 01987ec8-7b15-7338-9b08-9ed1dca9ea4d
+                  sharedFilterId: null
+                  height: 150
+                  showLabel: true
+                - showSource: false
+                  hideOutput: false
+                  type: CELL
+                  cellId: 01987fdc-013e-7338-9b5a-9bb93d912126
+                  sharedFilterId: null
+                  height: null
+                  showLabel: true
+            - start: 25
+              end: 120
+              elements:
+                - showSource: false
+                  hideOutput: false
+                  type: CELL
+                  cellId: 01987f7f-4380-7338-9b2a-8e5bf8a2d22d
+                  sharedFilterId: null
+                  height: 300
+                  showLabel: true
+        - columns:
+            - start: 0
+              end: 120
+              elements:
+                - showSource: false
+                  hideOutput: false
+                  type: CELL
+                  cellId: 01987f9d-4ebd-7338-9b33-fa58d574d553
+                  sharedFilterId: null
+                  height: null
+                  showLabel: true
+sharedFilters: []
