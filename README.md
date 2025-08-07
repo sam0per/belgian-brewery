@@ -98,4 +98,8 @@ python src/transform/bigquery_loader.py
 cd bebrew
 dbt run
 dbt test
+
+# Generate dbt documentation:
+dbt docs generate
+dbt docs serve
 ```
