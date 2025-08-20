@@ -26,6 +26,39 @@ Sourcing Belgian beer data to identify potential partnership regions, high-quali
 
 ---
 
+## ⚙️ Kaggle API
+
+To use the Kaggle API, you need to authenticate your requests with an API token. This is done by downloading a `kaggle.json` file containing your credentials.
+
+**Generating your API Token:**  
+1. Log in to your Kaggle account.
+1. Go to your user profile and select the "Account" tab.
+1. Scroll down to the "API" section and click on "Create New API Token".
+1. This will trigger the download of the `kaggle.json` file.
+
+**Placing the `kaggle.json` file:**  
+The Kaggle API client expects this file to be in a specific location.
+
+- **For Linux, macOS, and other UNIX-based systems**: Place the `kaggle.json` file in the `~/.kaggle/` directory. You may need to create this directory first.  
+```bash
+mkdir ~/.kaggle
+mv /path/to/your/downloads/kaggle.json ~/.kaggle/
+```
+
+- **For Windows:** Place the `kaggle.json` file in the `C:\Users\<Your-Username>\.kaggle\` directory. You might need to create the .kaggle folder.
+
+**Verifying Your Setup from the Terminal**
+
+To quickly confirm that your Kaggle API is set up correctly, open your terminal or command prompt and run the following command:  
+```bash
+kaggle competitions list
+```
+
+Common Errors:
+- `kaggle: command not found`: This error means the location of the kaggle executable is not in your system's `PATH`. You may need to add it. For Linux and macOS, this is often `~/.local/bin`. For Windows, it's typically in your Python Scripts folder.
+- `OSError: Could not find kaggle.json.`: This indicates that your `kaggle.json` file is not in the correct directory. For Linux and macOS, it should be in `~/.kaggle/`. For Windows, it should be in `C:\Users\<Your-Username>\.kaggle\`.
+- `401 - Unauthorized`: This error means there's an issue with your API credentials in the `kaggle.json` file. You may need to generate a new token from the Kaggle website.
+
 ## 📊 Hex Dashboard
 
 The Hex dashboard provides an interactive interface for users to explore the brewery data, filter by breweries with the largest variety of beers, and gain insights into potential partnerships.
