@@ -2,6 +2,7 @@
 
 **Running go‑to‑market pipeline using scraped + structured beer industry data.  
 Built for showcasing data analysis skills in Python → BigQuery → dbt → Hex → Actionable Insights.**
+<img width="800" height="533" alt="IsometricDataFactory" src="https://github.com/user-attachments/assets/e7ff47f9-3ac8-48f9-9764-9df7c65a3876" />
 
 ---
 
